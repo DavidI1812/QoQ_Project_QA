@@ -12,11 +12,11 @@
 
 | Métrica | Valor |
 | :--- | :--- |
-| **Total Casos Ejecutados** | 31 |
-| **✅ Pasaron (Pass)** | 19|
+| **Total Casos Ejecutados** | 46 |
+| **✅ Pasaron (Pass)** | 38|
 | **❌ Fallaron (Fail)** | 1 |
 | **⚠️ Bloqueados** | 2 |
-| **Defectos Encontrados** | 3 |
+| **Defectos Encontrados** | 5 |
 
 ---
 
