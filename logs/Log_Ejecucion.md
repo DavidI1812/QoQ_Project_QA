@@ -13,7 +13,7 @@
 | Métrica | Valor |
 | :--- | :--- |
 | **Total Casos Ejecutados** | 0 |
-| **✅ Pasaron (Pass)** | 0 |
+| **✅ Pasaron (Pass)** | 1 |
 | **❌ Fallaron (Fail)** | 0 |
 | **⚠️ Bloqueados** | 0 |
 | **Defectos Encontrados** | 0 |
