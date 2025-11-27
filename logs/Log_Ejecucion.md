@@ -3,7 +3,7 @@
 **Proyecto:** Distribution Center Package Management System  
 **Iteración:** 1 (Ciclo PDCA)  
 **Fecha:** 26/11/2025  
-**Tester:** [Tu Nombre / Equipo QoQ]  
+**Tester:** [David Ibarra Meza & Jorge Emir Medrano Reyes / Equipo QoQ]  
 **Versión del Software:** v1.0  
 
 ---
@@ -12,8 +12,8 @@
 
 | Métrica | Valor |
 | :--- | :--- |
-| **Total Casos Ejecutados** | 0 |
-| **✅ Pasaron (Pass)** | 11|
+| **Total Casos Ejecutados** | 23 |
+| **✅ Pasaron (Pass)** | 19|
 | **❌ Fallaron (Fail)** | 1 |
 | **⚠️ Bloqueados** | 2 |
 | **Defectos Encontrados** | 1 |
@@ -112,4 +112,67 @@
 - **Datos:** Barcode `1015`, Prioridad `express` (todo minúsculas).
 - **Esperado:** El sistema debe entenderlo y asignar Categoría **Express**.
 - **Resultado Real:** Lo registró con minusculas
+- **Estado:** PASS
+
+## 🧠 PRUEBAS FR2: Gestión de Categorías (8 Casos)
+
+#### 🆔 TC-FR2-001: Categorización Express (Alta Prioridad)
+> **Regla:** Si Prioridad es "Express", siempre es Categoría Express (Zona B), sin importar el peso.
+- **Datos:** Barcode `2001`, Peso `60` (Muy pesado), Prioridad `Express`.
+- **Esperado:** Categoría **Express** (No Heavy). Ubicación empieza con `B`.
+- **Resultado Real:** Se registró como express
+- **Estado:** PASS
+
+#### 🆔 TC-FR2-002: Categorización Internacional
+> **Regla:** Si destino dice "International" o tiene muchas comas.
+- **Datos:** Barcode `2002`, Peso `10`, Destino `Madrid, Spain, International`, Prioridad `Standard`.
+- **Esperado:** Categoría **International**. Ubicación empieza con `E`.
+- **Resultado Real:** Se registró como Standard
+- **Estado:** PASS
+
+#### 🆔 TC-FR2-003: Categorización Heavy (> 50kg)
+> **Regla:** Peso mayor a 50kg.
+- **Datos:** Barcode `2003`, Peso `55.5`, Prioridad `Standard`.
+- **Esperado:** Categoría **Heavy**. Ubicación empieza con `D`.
+- **Resultado Real:** Se registró como Heavy
+- **Estado:** PASS
+
+#### 🆔 TC-FR2-004: Categorización Fragile (< 5kg)
+> **Regla:** Peso menor a 5kg.
+- **Datos:** Barcode `2004`, Peso `3.0`, Prioridad `Standard`.
+- **Esperado:** Categoría **Fragile**. Ubicación empieza con `C`.
+- **Resultado Real:** Se registró como Fragile
+- **Estado:** PASS
+
+#### 🆔 TC-FR2-005: Categorización Standard (Default)
+> **Regla:** Cuando no aplica ninguna de las anteriores.
+- **Datos:** Barcode `2005`, Peso `20`, Destino `Mexico City`, Prioridad `Standard`.
+- **Esperado:** Categoría **Standard**. Ubicación empieza con `A`.
+- **Resultado Real:** Standard
+- **Estado:** PASS
+
+#### 🆔 TC-FR2-006: Prioridad de Reglas (Jerarquía)
+> **Regla:** Verificar quién gana: ¿International o Heavy? (Según Requisitos: International > Heavy).
+- **Datos:** Barcode `2006`, Peso `80` (Heavy), Destino `Tokyo, Japan, International`.
+- **Esperado:** Debe ser **International** (Zona E), porque es más importante que el peso.
+- **Resultado Real:** Se registró como International
+- **Estado:** PASS
+
+#### 🆔 TC-FR2-007: Consulta por Categoría
+> **Objetivo:** Verificar que el reporte agrupa bien los paquetes.
+- **Acción:** Ejecutar opción 4 del menú (View Summary Report).
+- **Esperado:** Debe mostrar conteos distintos para Express, Heavy, International, etc.
+- **Resultado Real:** Si hay paquetes en distintos Packages
+- **Estado:** PASS
+
+#### 🆔 TC-FR2-008: Verificación de Zonas (A-E)
+> **Objetivo:** Confirmar que cada categoría cayó en su letra correcta.
+- **Acción:** Revisar en SQLite Viewer la tabla `Locations` para los paquetes 2001-2005.
+- **Esperado:**
+  - Express -> Zona B
+  - International -> Zona E
+  - Heavy -> Zona D
+  - Fragile -> Zona C
+  - Standard -> Zona A
+- **Resultado Real:** Todo esta ordenado
 - **Estado:** PASS
