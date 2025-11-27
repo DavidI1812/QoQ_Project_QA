@@ -330,3 +330,4 @@
 - *Acción:* Verificar que la tabla ASCII del reporte se alinee bien en la terminal.
 - *Resultado Real:* Se ve espectacular y legible.
 - *Estado:* PASS
+- 
