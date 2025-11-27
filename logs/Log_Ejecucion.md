@@ -251,82 +251,82 @@
 ## 📊 PRUEBAS FR4: Rastreo y Reportes (12 Casos)
 
 #### 🆔 TC-FR4-001: Búsqueda por Barcode Exacto
-> **Objetivo:** Encontrar un paquete existente.
-- **Acción:** Opción 2 -> Buscar `1001`.
-- **Esperado:** Muestra todos los detalles (Peso, Ubicación, Estado).
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* Encontrar un paquete existente.
+- *Acción:* Opción 2 -> Buscar 1001.
+- *Esperado:* Muestra todos los detalles (Peso, Ubicación, Estado).
+- *Resultado Real:* Se encontro correctamente todos los datos
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-002: Búsqueda de Paquete Inexistente
-> **Objetivo:** Verificar manejo de "No encontrado".
-- **Acción:** Opción 2 -> Buscar `999999999`.
-- **Esperado:** Mensaje "Package not found".
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* Verificar manejo de "No encontrado".
+- *Acción:* Opción 2 -> Buscar 999999999.
+- *Esperado:* Mensaje "Package not found".
+- *Resultado Real:* Como no hay un paquete con ese bardcode no se encontro nada, así que fue correcto
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-003: Búsqueda de Paquete Entregado
-> **Objetivo:** Verificar que guarda historial de entregados.
-- **Acción:** Buscar el paquete `2005` (que entregamos en FR3).
-- **Esperado:** Debe aparecer con Status: 'Delivered'.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* Verificar que guarda historial de entregados.
+- *Acción:* Buscar el paquete 2005 (que entregamos en FR3).
+- *Esperado:* Debe aparecer con Status: 'Delivered'.
+- *Resultado Real:* Aparece en Status: Delivered
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-004: Audit Trail - Registro
-> **Objetivo:** Verificar que el nacimiento del paquete se guardó.
-- **Acción:** SQL en tabla `AuditTrail` para paquete `1001`.
-- **Esperado:** Fila con Action = 'REGISTERED'.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* Verificar que el nacimiento del paquete se guardó.
+- *Acción:* SQL en tabla AuditTrail para paquete 1001.
+- *Esperado:* Fila con Action = 'REGISTERED'.
+- *Resultado Real:* Aparece en con la acción Registered.
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-005: Audit Trail - Cambio de Estado
-> **Objetivo:** Verificar que los movimientos se guardan.
-- **Acción:** SQL en tabla `AuditTrail` para paquete `3006`.
-- **Esperado:** Fila con Action = 'STATUS_UPDATE' y New Status = 'In Transit'.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* Verificar que los movimientos se guardan.
+- *Acción:* SQL en tabla AuditTrail para paquete 3006.
+- *Esperado:* Fila con Action = 'STATUS_UPDATE' y New Status = 'In Transit'.
+- *Resultado Real:* Si se visualiza en la tabla Auditrail para el paquete 3006
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-006: Validación de Fechas en Auditoría
-> **Objetivo:** Que el log tenga fecha coherente.
-- **Acción:** Revisar columna `timestamp` en `AuditTrail`.
-- **Esperado:** Fecha de hoy, hora reciente.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* Que el log tenga fecha coherente.
+- *Acción:* Revisar columna timestamp en AuditTrail.
+- *Esperado:* Fecha de hoy, hora reciente.
+- *Resultado Real:* Si tiene fecha reciente cuando se realizan actualizaciones.
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-007: Reporte General - Conteo Total
-> **Objetivo:** El reporte suma bien.
-- **Acción:** Opción 4 (Summary Report).
-- **Esperado:** "Total Packages" debe coincidir con tus registros (aprox 10-15).
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* El reporte suma bien.
+- *Acción:* Opción 4 (Summary Report).
+- *Esperado:* "Total Packages" debe coincidir con tus registros (aprox 10-15).
+- *Resultado Real:* Se tienen 10 paquetes en el summary report.
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-008: Reporte - Distribución por Categoría
-> **Objetivo:** El reporte desglosa bien.
-- **Acción:** Ver sección "By Category" en el reporte.
-- **Esperado:** Debe tener >0 en Standard, Heavy, Fragile, Express.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* El reporte desglosa bien.
+- *Acción:* Ver sección "By Category" en el reporte.
+- *Esperado:* Debe tener >0 en Standard, Heavy, Fragile, Express.
+- *Resultado Real:* En todos las categorias tiene mayor a 0.
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-009: Reporte - Ocupación del Almacén
-> **Objetivo:** Cálculo de porcentaje.
-- **Acción:** Ver sección "Warehouse Occupancy".
-- **Esperado:** Un porcentaje válido (ej. "5.0% occupied").
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* Cálculo de porcentaje.
+- *Acción:* Ver sección "Warehouse Occupancy".
+- *Esperado:* Un porcentaje válido (ej. "5.0% occupied").
+- *Resultado Real:* En todas las zonas hay un cierto porcentaje válido como ocupado.
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-010: Búsqueda Case Sensitivity
-> **Objetivo:** ¿Distingue mayúsculas de minúsculas?
-- **Acción:** Buscar `1001A` vs `1001a` (si usaste letras). Si solo usas números, marcar como N/A o probar con `1010A`.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* ¿Distingue mayúsculas de minúsculas?
+- *Acción:* Buscar 1001A vs 1001a (si usaste letras). Si solo usas números, marcar como N/A o probar con 1010A.
+- *Resultado Real:* Distingue mayúsculas de minúsculas, por lo que si se busca un paquete con minúsculas no se encuentra el paquete.
+- *Estado:* NOT PASS
 
 #### 🆔 TC-FR4-011: Integridad del Historial
-> **Objetivo:** Un paquete no puede tener Updates antes de su Registro.
-- **Acción:** Verificar visualmente en DB que el ID de 'REGISTERED' sea menor al de 'STATUS_UPDATE'.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* Un paquete no puede tener Updates antes de su Registro.
+- *Acción:* Verificar visualmente en DB que el ID de 'REGISTERED' sea menor al de 'STATUS_UPDATE'.
+- *Resultado Real:* Si cumple
+- *Estado:* PASS
 
 #### 🆔 TC-FR4-012: Exportación/Visualización Limpia
-> **Objetivo:** El reporte es legible.
-- **Acción:** Verificar que la tabla ASCII del reporte se alinee bien en la terminal.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+> *Objetivo:* El reporte es legible.
+- *Acción:* Verificar que la tabla ASCII del reporte se alinee bien en la terminal.
+- *Resultado Real:* Se ve espectacular y legible.
+- *Estado:* PASS
