@@ -176,3 +176,158 @@
   - Standard -> Zona A
 - **Resultado Real:** Todo esta ordenado
 - **Estado:** PASS
+  
+  ## 🏭 PRUEBAS FR3: Gestión de Ubicaciones (10 Casos)
+
+#### 🆔 TC-FR3-001: Asignación Correcta de Zona (Lógica)
+> **Objetivo:** Verificar que un paquete Heavy vaya a Zona D y uno Fragile a Zona C.
+- **Datos:** Usar el paquete Heavy (`2003`) y Fragile (`2004`) de la fase anterior.
+- **Esperado:** Heavy -> `D...` | Fragile -> `C...`
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-002: Validación de Formato de Ubicación
+> **Objetivo:** Confirmar formato estándar (Letra + Fila + Estante).
+- **Datos:** Revisar ubicación del paquete `2001`.
+- **Esperado:** Regex `[A-E][0-9]{2}-[0-9]{2}` (Ej: B01-01).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-003: Flag de Ocupación (DB Check)
+> **Objetivo:** Verificar que la DB marque el lugar como ocupado.
+- **Acción:** Revisar tabla `Locations` para la ubicación del paquete `2001`.
+- **Esperado:** `is_occupied` = 1.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-004: Liberación por Entrega (Delivered)
+> **Objetivo:** Al entregar, el espacio se libera.
+- **Acción:** Cambiar estado del paquete `2005` a `Delivered`.
+- **Esperado:** Su ubicación en `Locations` debe pasar a `is_occupied` = 0.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-005: Reciclaje de Ubicaciones
+> **Objetivo:** Un nuevo paquete debe tomar el hueco liberado.
+- **Acción:** Registrar paquete `3005`.
+- **Esperado:** Debe tomar la MISMA ubicación que se liberó en el caso 004.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-006: Liberación por "In Transit"
+> **Objetivo:** Si sale del edificio, libera espacio.
+- **Acción:** Cambiar paquete `3006` a `In Transit`.
+- **Esperado:** `is_occupied` = 0.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-007: Liberación por "Lost"
+> **Objetivo:** Si se pierde, libera espacio.
+- **Acción:** Cambiar paquete `3007` a `Lost`.
+- **Esperado:** `is_occupied` = 0.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-008: Integridad Referencial
+> **Objetivo:** No puede haber paquetes en ubicaciones fantasmas.
+- **Acción:** SQL Check de IDs huérfanos.
+- **Esperado:** 0 resultados devueltos por la query de error.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-009: Llenado Secuencial (Next Slot)
+> **Objetivo:** Si A01-01 está lleno, el siguiente va a A01-02.
+- **Acción:** Registrar `3009` (Standard) teniendo el slot 01 ocupado.
+- **Esperado:** Ubicación asignada debe terminar en `02` (o siguiente libre).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR3-010: Persistencia tras Reinicio
+> **Objetivo:** Las ubicaciones no se resetean al cerrar la app.
+- **Acción:** Cerrar programa -> Abrir -> Checar DB.
+- **Esperado:** `is_occupied` sigue en 1 para paquetes activos.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+  
+## 📊 PRUEBAS FR4: Rastreo y Reportes (12 Casos)
+
+#### 🆔 TC-FR4-001: Búsqueda por Barcode Exacto
+> **Objetivo:** Encontrar un paquete existente.
+- **Acción:** Opción 2 -> Buscar `1001`.
+- **Esperado:** Muestra todos los detalles (Peso, Ubicación, Estado).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-002: Búsqueda de Paquete Inexistente
+> **Objetivo:** Verificar manejo de "No encontrado".
+- **Acción:** Opción 2 -> Buscar `999999999`.
+- **Esperado:** Mensaje "Package not found".
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-003: Búsqueda de Paquete Entregado
+> **Objetivo:** Verificar que guarda historial de entregados.
+- **Acción:** Buscar el paquete `2005` (que entregamos en FR3).
+- **Esperado:** Debe aparecer con Status: 'Delivered'.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-004: Audit Trail - Registro
+> **Objetivo:** Verificar que el nacimiento del paquete se guardó.
+- **Acción:** SQL en tabla `AuditTrail` para paquete `1001`.
+- **Esperado:** Fila con Action = 'REGISTERED'.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-005: Audit Trail - Cambio de Estado
+> **Objetivo:** Verificar que los movimientos se guardan.
+- **Acción:** SQL en tabla `AuditTrail` para paquete `3006`.
+- **Esperado:** Fila con Action = 'STATUS_UPDATE' y New Status = 'In Transit'.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-006: Validación de Fechas en Auditoría
+> **Objetivo:** Que el log tenga fecha coherente.
+- **Acción:** Revisar columna `timestamp` en `AuditTrail`.
+- **Esperado:** Fecha de hoy, hora reciente.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-007: Reporte General - Conteo Total
+> **Objetivo:** El reporte suma bien.
+- **Acción:** Opción 4 (Summary Report).
+- **Esperado:** "Total Packages" debe coincidir con tus registros (aprox 10-15).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-008: Reporte - Distribución por Categoría
+> **Objetivo:** El reporte desglosa bien.
+- **Acción:** Ver sección "By Category" en el reporte.
+- **Esperado:** Debe tener >0 en Standard, Heavy, Fragile, Express.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-009: Reporte - Ocupación del Almacén
+> **Objetivo:** Cálculo de porcentaje.
+- **Acción:** Ver sección "Warehouse Occupancy".
+- **Esperado:** Un porcentaje válido (ej. "5.0% occupied").
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-010: Búsqueda Case Sensitivity
+> **Objetivo:** ¿Distingue mayúsculas de minúsculas?
+- **Acción:** Buscar `1001A` vs `1001a` (si usaste letras). Si solo usas números, marcar como N/A o probar con `1010A`.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-011: Integridad del Historial
+> **Objetivo:** Un paquete no puede tener Updates antes de su Registro.
+- **Acción:** Verificar visualmente en DB que el ID de 'REGISTERED' sea menor al de 'STATUS_UPDATE'.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR4-012: Exportación/Visualización Limpia
+> **Objetivo:** El reporte es legible.
+- **Acción:** Verificar que la tabla ASCII del reporte se alinee bien en la terminal.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
