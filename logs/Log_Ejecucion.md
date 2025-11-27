@@ -12,11 +12,11 @@
 
 | Métrica | Valor |
 | :--- | :--- |
-| **Total Casos Ejecutados** | 23 |
+| **Total Casos Ejecutados** | 31 |
 | **✅ Pasaron (Pass)** | 19|
 | **❌ Fallaron (Fail)** | 1 |
 | **⚠️ Bloqueados** | 2 |
-| **Defectos Encontrados** | 1 |
+| **Defectos Encontrados** | 3 |
 
 ---
 
@@ -183,71 +183,70 @@
 > **Objetivo:** Verificar que un paquete Heavy vaya a Zona D y uno Fragile a Zona C.
 - **Datos:** Usar el paquete Heavy (`2003`) y Fragile (`2004`) de la fase anterior.
 - **Esperado:** Heavy -> `D...` | Fragile -> `C...`
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** Aparece todo en orden
+- **Estado:** PASS
 
 #### 🆔 TC-FR3-002: Validación de Formato de Ubicación
 > **Objetivo:** Confirmar formato estándar (Letra + Fila + Estante).
 - **Datos:** Revisar ubicación del paquete `2001`.
 - **Esperado:** Regex `[A-E][0-9]{2}-[0-9]{2}` (Ej: B01-01).
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** Se registro correctamente
+- **Estado:** PASS
 
 #### 🆔 TC-FR3-003: Flag de Ocupación (DB Check)
 > **Objetivo:** Verificar que la DB marque el lugar como ocupado.
 - **Acción:** Revisar tabla `Locations` para la ubicación del paquete `2001`.
 - **Esperado:** `is_occupied` = 1.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** Esta registrado como ocupado
+- **Estado:** PASS
 
 #### 🆔 TC-FR3-004: Liberación por Entrega (Delivered)
 > **Objetivo:** Al entregar, el espacio se libera.
 - **Acción:** Cambiar estado del paquete `2005` a `Delivered`.
 - **Esperado:** Su ubicación en `Locations` debe pasar a `is_occupied` = 0.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** Si dio 0
+- **Estado:** PASS
 
 #### 🆔 TC-FR3-005: Reciclaje de Ubicaciones
 > **Objetivo:** Un nuevo paquete debe tomar el hueco liberado.
 - **Acción:** Registrar paquete `3005`.
 - **Esperado:** Debe tomar la MISMA ubicación que se liberó en el caso 004.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** No, me salió que esta ocupado
+- **Estado:** Revisión
 
 #### 🆔 TC-FR3-006: Liberación por "In Transit"
 > **Objetivo:** Si sale del edificio, libera espacio.
 - **Acción:** Cambiar paquete `3006` a `In Transit`.
 - **Esperado:** `is_occupied` = 0.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
-
+- **Resultado Real:** Me salio 0
+- **Estado:** PASS
 #### 🆔 TC-FR3-007: Liberación por "Lost"
 > **Objetivo:** Si se pierde, libera espacio.
 - **Acción:** Cambiar paquete `3007` a `Lost`.
 - **Esperado:** `is_occupied` = 0.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** En las opciones, no me sale LOST, y me sale 1
+- **Estado:** Revisión
 
 #### 🆔 TC-FR3-008: Integridad Referencial
 > **Objetivo:** No puede haber paquetes en ubicaciones fantasmas.
 - **Acción:** SQL Check de IDs huérfanos.
 - **Esperado:** 0 resultados devueltos por la query de error.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** Me sale 0
+- **Estado:** PASS
 
 #### 🆔 TC-FR3-009: Llenado Secuencial (Next Slot)
 > **Objetivo:** Si A01-01 está lleno, el siguiente va a A01-02.
 - **Acción:** Registrar `3009` (Standard) teniendo el slot 01 ocupado.
 - **Esperado:** Ubicación asignada debe terminar en `02` (o siguiente libre).
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** Si me dió 02
+- **Estado:** PASS
 
 #### 🆔 TC-FR3-010: Persistencia tras Reinicio
 > **Objetivo:** Las ubicaciones no se resetean al cerrar la app.
 - **Acción:** Cerrar programa -> Abrir -> Checar DB.
 - **Esperado:** `is_occupied` sigue en 1 para paquetes activos.
-- **Resultado Real:** ____________________
-- **Estado:** ⏳ PENDIENTE
+- **Resultado Real:** Todo esta en su lugar
+- **Estado:** PASS
   
 ## 📊 PRUEBAS FR4: Rastreo y Reportes (12 Casos)
 
