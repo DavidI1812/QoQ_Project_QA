@@ -330,4 +330,128 @@
 - *Acción:* Verificar que la tabla ASCII del reporte se alinee bien en la terminal.
 - *Resultado Real:* Se ve espectacular y legible.
 - *Estado:* PASS
-- 
+  
+## 📈 PRUEBAS FR5: Generación de Reportes (6 Casos)
+
+#### 🆔 TC-FR5-001: Generación Básica del Reporte
+> **Objetivo:** Que el sistema no explote al pedir el reporte.
+- **Acción:** Opción 4 (View Summary Report).
+- **Esperado:** Se despliega una tabla o lista en la terminal sin errores de Python.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR5-002: Exactitud del Conteo Total
+> **Objetivo:** Verificar matemáticas simples.
+- **Acción:** Cuenta tus filas en SQLite (o recuerda cuántos metiste, aprox 15). Compara con "Total Packages".
+- **Esperado:** Los números deben coincidir exactamente.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR5-003: Exactitud del % de Ocupación
+> **Objetivo:** Verificar fórmula: (Ocupados / Total Espacios) * 100.
+- **Dato:** Si tienes 40 espacios totales (A,B,C,D,E x 8 huecos) y 10 paquetes.
+- **Esperado:** 10/40 = 25%. El reporte debe decir "25.0%".
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR5-004: Desglose por Categorías
+> **Objetivo:** Que no mezcle peras con manzanas.
+- **Acción:** Verifica que la suma de (Standard + Express + Heavy + ...) sea igual al Total.
+- **Esperado:** La suma de las partes debe ser igual al todo.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR5-005: Actualización en Tiempo Real
+> **Objetivo:** El reporte no usa "caché" viejo.
+- **Acción:** 1. Ver reporte. 2. Registrar paquete nuevo. 3. Ver reporte de nuevo.
+- **Esperado:** El contador "Total" debe haber subido +1 inmediatamente.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-FR5-006: Legibilidad y Formato
+> **Objetivo:** UX (Experiencia de Usuario).
+- **Acción:** Observar la alineación del texto.
+- **Esperado:** Las columnas deben estar alineadas, se deben entender los títulos.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+## ⚡ PRUEBAS NFR1: Rendimiento / Performance (5 Casos)
+
+#### 🆔 TC-NFR1-001: Tiempo de Respuesta - Registro
+> **Objetivo:** El usuario no espera.
+- **Acción:** Registrar paquete.
+- **Esperado:** < 2 segundos desde que das Enter hasta que sale "Success".
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR1-002: Tiempo de Respuesta - Búsqueda
+> **Objetivo:** Búsqueda indexada rápida.
+- **Acción:** Buscar un paquete.
+- **Esperado:** < 1 segundo (Instantáneo).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR1-003: Tiempo de Respuesta - Reporte Complejo
+> **Objetivo:** La agregación de datos es eficiente.
+- **Acción:** Generar Reporte (Opción 4).
+- **Esperado:** < 2 segundos (No debe "pensar" mucho).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR1-004: Consumo de Espacio en Disco
+> **Objetivo:** La DB no crece exponencialmente sin razón.
+- **Acción:** Ver tamaño del archivo `distribution_center.db` en Windows.
+- **Esperado:** Debe ser pequeño (KB), no MB gigantes para pocos datos.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR1-005: Estabilidad bajo Repetición
+> **Objetivo:** No se alenta con el uso.
+- **Acción:** Hacer 5 búsquedas seguidas muy rápido.
+- **Esperado:** La quinta búsqueda debe ser tan rápida como la primera (sin Memory Leak).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+## 🛡️ PRUEBAS NFR2: Robustez y Seguridad (6 Casos)
+
+#### 🆔 TC-NFR2-001: Inyección SQL (Seguridad Básica)
+> **Objetivo:** Evitar acceso no autorizado a datos.
+- **Acción:** En Search, escribir `' OR '1'='1`.
+- **Esperado:** Sistema maneja el input como texto literal, no como comando. "Not found".
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR2-002: Manejo de Tipos de Dato Incorrectos
+> **Objetivo:** Que no crashee si meto letras en números.
+- **Acción:** En "Weight (kg)", escribir `DIEZ`.
+- **Esperado:** El programa debe decir "Invalid value" o lanzar error controlado, NO cerrarse de golpe (Crash).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR2-003: Desbordamiento de Buffer (Strings Largos)
+> **Objetivo:** Ver límites de memoria.
+- **Acción:** En "Destination", pegar un texto larguísimo (ej. 500 letras 'A').
+- **Esperado:** Lo corta o lo guarda, pero no explota.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR2-004: Caracteres Especiales (UTF-8)
+> **Objetivo:** Soporte internacional.
+- **Acción:** Registrar Destino con Emojis (📦✈️) o Kanji (日本).
+- **Esperado:** Se guarda y se muestra bien (sin signos de interrogación `???`).
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR2-005: Integridad tras Cierre Forzado
+> **Objetivo:** No corrupción de datos.
+- **Acción:** 1. Empezar a registrar. 2. Dar `Ctrl + C` (Matar proceso) a la mitad. 3. Abrir de nuevo.
+- **Esperado:** La DB sigue funcionando y el último paquete (incompleto) no se guardó.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
+
+#### 🆔 TC-NFR2-006: Acceso Concurrente (Simulado)
+> **Objetivo:** Bloqueo de archivos.
+- **Acción:** Abre **DOS** terminales. Corre el programa en ambas. Intenta registrar en las dos a la vez.
+- **Esperado:** SQLite maneja el bloqueo (uno espera al otro) o da error de "Database Locked", pero no se corrompe.
+- **Resultado Real:** ____________________
+- **Estado:** ⏳ PENDIENTE
