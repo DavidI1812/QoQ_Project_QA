@@ -188,6 +188,7 @@ class PackageManager:
         self.db.cursor.execute("""
             SELECT location_id FROM Locations
             WHERE category_id = ? AND is_occupied = 0
+            ORDER BY location_id ASC
             LIMIT 1
         """, (category_id,))
         
@@ -199,6 +200,16 @@ class PackageManager:
                         priority: str) -> bool:
         """Register a new package in the system."""
         try:
+            # Basic validation checks
+            if weight is None or weight <= 0:
+                print(f"❌ Error: Invalid weight ({weight}). Must be > 0.")
+                return False
+            if length is None or length <= 0 or width is None or width <= 0 or height is None or height <= 0:
+                print(f"❌ Error: Invalid dimensions. All must be > 0.")
+                return False
+            if not destination or destination.strip() == '':
+                print(f"❌ Error: Destination cannot be empty.")
+                return False
             # Check if barcode already exists
             self.db.cursor.execute("""
                 SELECT barcode FROM Packages WHERE barcode = ?
@@ -220,6 +231,9 @@ class PackageManager:
                 print(f"❌ Error: No available locations for category {category_name}")
                 return False
             
+            # Begin explicit transaction to ensure atomic operations
+            self.db.conn.execute('BEGIN')
+
             # Insert package
             self.db.cursor.execute("""
                 INSERT INTO Packages 
@@ -250,7 +264,6 @@ class PackageManager:
                 VALUES (?, 'REGISTERED', 'Stored', ?, ?)
             """, (package_id, location_code, 
                   f"Package categorized as {category_name}"))
-            
             self.db.conn.commit()
             
             print(f"✅ Package registered successfully!")
@@ -315,7 +328,7 @@ class PackageManager:
                 FROM Packages p
                 LEFT JOIN Categories c ON p.category_id = c.category_id
                 LEFT JOIN Locations l ON p.location_id = l.location_id
-                WHERE p.barcode = ?
+                WHERE TRIM(p.barcode) = TRIM(?) COLLATE NOCASE
                 LIMIT 1
             """, (key,))
             row = cur.fetchone()
@@ -347,19 +360,19 @@ class PackageManager:
             
             old_status = package['status']
             
-            # Update status
+            # Update status using package_id to avoid case mismatches
             self.db.cursor.execute("""
-                UPDATE Packages SET status = ? WHERE barcode = ?
-            """, (new_status, barcode))
-            
-            # If status is delivered, free up location
-            if new_status.lower() == 'delivered':
+                UPDATE Packages SET status = ? WHERE package_id = ?
+            """, (new_status, package['package_id']))
+
+            # If status is delivered, lost, or in transit, free up location
+            if new_status.lower() in ('delivered', 'lost', 'in transit'):
                 self.db.cursor.execute("""
                     UPDATE Locations SET is_occupied = 0
                     WHERE location_id = (
-                        SELECT location_id FROM Packages WHERE barcode = ?
+                        SELECT location_id FROM Packages WHERE package_id = ?
                     )
-                """, (barcode,))
+                """, (package['package_id'],))
             
             # Create audit trail
             self.db.cursor.execute("""
