@@ -266,34 +266,74 @@ class PackageManager:
             return False
     
     def search_package(self, barcode: str) -> Optional[dict]:
-        """Search for a package by barcode."""
-        self.db.cursor.execute("""
+        """Search for a package by barcode (robust: trims, case-insensitive, numeric fallback)."""
+        key = barcode.strip()
+        cur = self.db.cursor
+
+        # 1) Try normalized string match (trim + nocase)
+        cur.execute("""
             SELECT 
                 p.package_id, p.barcode, p.weight, p.length, p.width, p.height,
                 p.destination, p.priority, p.status, p.received_at,
                 c.category_name, l.location_code
             FROM Packages p
-            JOIN Categories c ON p.category_id = c.category_id
+            LEFT JOIN Categories c ON p.category_id = c.category_id
             LEFT JOIN Locations l ON p.location_id = l.location_id
-            WHERE p.barcode = ?
-        """, (barcode,))
-        
-        result = self.db.cursor.fetchone()
-        
-        if not result:
+            WHERE TRIM(p.barcode) = TRIM(?) COLLATE NOCASE
+            LIMIT 1
+        """, (key,))
+        row = cur.fetchone()
+
+        # 2) If not found, try numeric match in case DB stored barcode as a number
+        if not row:
+            try:
+                num = int(key)
+            except ValueError:
+                num = None
+
+            if num is not None:
+                cur.execute("""
+                    SELECT 
+                        p.package_id, p.barcode, p.weight, p.length, p.width, p.height,
+                        p.destination, p.priority, p.status, p.received_at,
+                        c.category_name, l.location_code
+                    FROM Packages p
+                    LEFT JOIN Categories c ON p.category_id = c.category_id
+                    LEFT JOIN Locations l ON p.location_id = l.location_id
+                    WHERE p.barcode = ?
+                    LIMIT 1
+                """, (num,))
+                row = cur.fetchone()
+
+        # 3) Final fallback: exact raw match
+        if not row:
+            cur.execute("""
+                SELECT 
+                    p.package_id, p.barcode, p.weight, p.length, p.width, p.height,
+                    p.destination, p.priority, p.status, p.received_at,
+                    c.category_name, l.location_code
+                FROM Packages p
+                LEFT JOIN Categories c ON p.category_id = c.category_id
+                LEFT JOIN Locations l ON p.location_id = l.location_id
+                WHERE p.barcode = ?
+                LIMIT 1
+            """, (key,))
+            row = cur.fetchone()
+
+        if not row:
             return None
-        
+
         return {
-            'package_id': result[0],
-            'barcode': result[1],
-            'weight': result[2],
-            'dimensions': f"{result[3]}x{result[4]}x{result[5]}",
-            'destination': result[6],
-            'priority': result[7],
-            'status': result[8],
-            'received_at': result[9],
-            'category': result[10],
-            'location': result[11]
+            'package_id': row[0],
+            'barcode': str(row[1]),
+            'weight': row[2],
+            'dimensions': f"{row[3]}x{row[4]}x{row[5]}",
+            'destination': row[6],
+            'priority': row[7],
+            'status': row[8],
+            'received_at': row[9],
+            'category': row[10],
+            'location': row[11]
         }
     
     def update_package_status(self, barcode: str, new_status: str) -> bool:
@@ -435,16 +475,18 @@ def search_package_ui(manager: PackageManager):
     """User interface for package search."""
     print("\n--- SEARCH PACKAGE ---")
     barcode = input("Enter barcode: ").strip()
-    
+    # remove surrounding quotes / invisible chars
+    barcode = barcode.strip('"\' \t\n\r')
+
     package = manager.search_package(barcode)
-    
+
     if package:
         print("\n📦 Package Details:")
         print(f"   Barcode:     {package['barcode']}")
         print(f"   Category:    {package['category']}")
         print(f"   Location:    {package['location']}")
-        print(f"   Weight:      {package['weight']} kg")
-        print(f"   Dimensions:  {package['dimensions']} cm")
+        print(f"   Weight:      {package['weight']}")
+        print(f"   Dimensions:  {package['dimensions']}")
         print(f"   Destination: {package['destination']}")
         print(f"   Priority:    {package['priority']}")
         print(f"   Status:      {package['status']}")
