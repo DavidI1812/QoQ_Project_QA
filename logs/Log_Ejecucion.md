@@ -13,8 +13,8 @@
 | Métrica | Valor |
 | :--- | :--- |
 | **Total Casos Ejecutados** | 71 |
-| **✅ Pasaron (✅PASS)** | 63 |
-| **❌ Fallaron (Fail)** | 2 |
+| **✅ Pasaron (✅PASS)** | 62 |
+| **❌ Fallaron (Fail)** | 3 |
 | **⚠️ Bloqueados** | 2 |
 | **Defectos Encontrados** | 5 |
 
@@ -317,7 +317,7 @@
 > *Objetivo:* ¿Distingue mayúsculas de minúsculas?
 - *Acción:* Buscar 1001A vs 1001a (si usaste letras). Si solo usas números, marcar como N/A o probar con 1010A.
 - *Resultado Real:* Distingue mayúsculas de minúsculas, por lo que si se busca un paquete con minúsculas no se encuentra el paquete.
-- *Estado:* NOT PASS
+- *Estado:* FAIL
 
 #### 🆔 TC-FR4-011: Integridad del Historial
 > *Objetivo:* Un paquete no puede tener Updates antes de su Registro.
@@ -338,7 +338,7 @@
 - **Acción:** Opción 4 (View Summary Report).
 - **Esperado:** Se despliega una tabla o lista en la terminal sin errores de Python.
 - **Resultado Real:** La terminal dice que no encontro ningún paquete
-- **Estado:** NOT ✅PASS
+- **Estado:** FAIL
 
 #### 🆔 TC-FR5-002: Exactitud del Conteo Total
 > **Objetivo:** Verificar matemáticas simples.
